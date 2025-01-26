@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <title>Profil Użytkownika</title>
+  <style>
+    .main{
+      Height: 100vh;
+      Width: 100vh;
+    }
+  </style>
+</head>
+<body>
+<div class="main container-fluid d-flex bg-light justify-content-center align-items-center">
+  <div class="secondary profile-container bg-light p-4 border border-dark">
+    <div class="avatar rounded-circle bg-light border border-dark d-flex justify-content-center align-items-center bg-secondary mx-auto"
+         style="width: 5vw; height: 5vw;">
+      <span class="avatar-text">👤</span>
+    </div>
+    <h1>Profil Użytkownika</h1>
+    <div class="form-container bg-light p-2 border border-dark">
+    <div class="d-flex flex-column align-items-center">
+      <label for="first-name">Imię:</label>
+      <input type="text" id="first-name" name="first-name" th:value="${firstName}">
+      <label for="last-name">Nazwisko:</label>
+      <input type="text" id="last-name" name="last-name" th:value="${lastName}">
+      <label for="phone-number">Nr. telefonu:</label>
+      <input type="number" id="phone-number" name="phone-number">
+      <label for="email">E-mail:</label>
+      <input type="text" id="email" name="email" th:value="${email}" readonly>
+    </div>
+  </div>
+    <br>
+    <div class="third password-container bg-light p-2 border border-dark">
+    <div class="d-flex flex-column align-items-center">
+      <label for="new-password">Nowe hasło:</label>
+      <input type="text" id="new-password">
+      <label for="repeat-password">Potwierdź hasło:</label>
+      <input type="text" id="repeat-password">
+    </div><br>
+      <div class="d-flex justify-content-center">
+    <button class="btn btn-outline-dark" onclick="changePassword()">Zresetuj hasło</button>
+      </div>
+  </div>
+    <br>
+    <div class="d-flex justify-content-center gap-2">
+    <a class="btn btn-outline-dark d-flex" href="/biletomat">Biletomat</a>
+    <a class="btn btn-outline-dark d-flex" href="/">Aktywne bilety</a>
+  </div>
+    <br>
+    <div class="d-flex justify-content-center">
+    <button class="btn btn-outline-dark" onclick="breakCookie()">Wyloguj się</button>
+     </div>
+  </div>
+
+</div>
+</body>
+<script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></script>
+<script>
+  async function changePassword () {
+    await fetch("/profilUżytkownika", {
+      method: "POST", redirect:"follow",
+      body: JSON.stringify({
+        newPassword: document.getElementById("new-password").value,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+            .then(res => {
+              if (res.redirected) {
+                window.location.href = res.url;
+              }
+            })
+  }
+
+  async function breakCookie() {
+    try {
+      const response = await fetch('/wylogowanie', {
+        method: 'GET',
+      })
+              .then(res => {
+                if (res.redirected) {
+                  window.location.href = res.url;
+                }
+              })
+    } catch (error) {
+      console.error('Wystąpił błąd przy wylogowywaniu:', error);
+    }
+  }
+
+</script>
+</html>

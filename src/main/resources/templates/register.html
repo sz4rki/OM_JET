@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>Strona Rejestracji</title>
+    <style>
+      .main{
+        Height: 100vh;
+        Width: 100vh;
+      }
+    </style>
+</head>
+<body>
+<div class="main container-fluid d-flex bg-light justify-content-center align-items-center">
+    <div class="secondary registration-container bg-light p-4 border border-dark">
+        <h1>Strona rejestracji</h1>
+        <div class="d-flex flex-column align-items-center">
+            <label for="email">E-mail:</label>
+            <input type="text" id="email" name="email">
+            <label for="password">Hasło:</label>
+            <input type="password" id="password" name="password">
+            <label for="confirm-password">Potwierdź hasło:</label>
+            <input type="password" id="confirm-password" name="confirm-password">
+            <label for="first-name">Imię:</label>
+            <input type="text" id="first-name" name="first-name">
+            <label for="last-name">Nazwisko:</label>
+            <input type="text" id="last-name" name="last-name"><br>
+            <button class="btn btn-outline-dark" id="register" onclick="register()">Zarejestruj się</button>
+        </div>
+    </div>
+</div>
+</body>
+<script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></script>
+<script>
+    async function register () {
+        await fetch("/rejestracja", {
+            method: "POST", redirect:"follow",
+            body: JSON.stringify({
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                firstName: document.getElementById("first-name").value,
+                lastName: document.getElementById("last-name").value
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+            .then(response => {
+                if (response.status === 409) {
+                    alert("Podany użytkownik już istnieje!");
+                } else if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+    }
+</script>
+</html>
